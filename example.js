@@ -84,92 +84,117 @@ client.on('message', async msg => {
             console.log(content);
 
                 }
+                else{
+                    if(msg.body){
+
+                        let id = msg.body;
+                        let userNumber = msg.from;
+
+                        console.log(id);
+                        console.log('Sent from'+userNumber);
+
+                        let number = parseInt(id);
+                        console.log(number);
+                        
+                        let UserNumber = parseInt(userNumber);
+                        console.log('Sent from'+UserNumber);
+            
+                        }
+
+                }
+                
 
          // if the user selects 1 on the menu which stands for FAQs
-         if (msg.body.startsWith('1') && content == null) {
+        //  if (msg.body.startsWith('1') && content == null) {
 
           
-                axios.get('http://127.0.0.1:8000/query_categories/')
-                      .then((response) => {
-                        var mesg =  '';
+        //         axios.get('http://127.0.0.1:8000/query_categories/')
+        //               .then((response) => {
+        //                 var mesg =  '';
                 
-                         for(let menu of response.data){
+        //                  for(let menu of response.data){
                                          
-                            mesg+='\n' + menu.id+'\t'+menu.name + '\n'; 
+        //                     mesg+='\n' + menu.id+'\t'+menu.name + '\n'; 
                                   
-                          } 
-                          +''; 
-                          msg.reply("Welcome to UDSM FAQs Menu, select the topic from the menu below by its number"+mesg);
-                      })
+        //                   } 
+        //                   +''; 
+        //                   msg.reply("Welcome to UDSM FAQs Menu, select the topic from the menu below by its number"+mesg);
+        //               })
                  
 
                    
                    
-                    console.log(content);
+        //             console.log(content);
 
-                    content = 1;
-                    console.log(content);
+        //             content = 1;
+        //             console.log(content);
 
 
-        }
+        // }
         
 // if the user selects 2 on the menu which stands for Locations
-                 if (msg.body.startsWith('2') && content == null) {
-                    async function displayLocations() {
+                //  if (msg.body.startsWith('2') && content == null) {
+                //     async function displayLocations() {
 
-                            var place =  "";
+                //             var place =  "";
   
-                            axios.get('http://127.0.0.1:8000/navigation/')
-                                  .then((response) => {
+                //             axios.get('http://127.0.0.1:8000/navigation/')
+                //                   .then((response) => {
                                     
                             
-                                     for(let navigation of response.data){
+                //                      for(let navigation of response.data){
                                                      
-                                      place+='\n' + navigation.id+'\t'+navigation.location + '\n'; 
+                //                       place+='\n' + navigation.id+'\t'+navigation.location + '\n'; 
                                               
-                                      } 
-                                      +''; 
+                //                       } 
+                //                       +''; 
                                       
-                                      console.log(place)
-                                      msg.reply("Welcome to UDSM Locations Menu, select the place from the menu below by its number"+place);
-                                  })
-                                }
+                //                       console.log(place)
+                //                       msg.reply("Welcome to UDSM Locations Menu, select the place from the menu below by its number"+place);
+                //                   })
+                //                 }
                                
                                
 
-                        displayLocations();
-                        console.log(content);
+                //         displayLocations();
+                //         console.log(content);
 
-                        content = 2;
-                        console.log(content);
+                //         content = 2;
+                //         console.log(content);
 
-                }
+                // }
   
 // if the user one of the FAQs
-if (!msg.body.startsWith('0') && content == 1) {
+// if (msg.body !='0' 
+// || msg.body !='1' 
+// || msg.body !='2' 
+// || msg.body !='3' 
+// || msg.body !='4' 
+// || msg.body !='5') {
     
 
-            // var place =  "";
-
-        // get faq id from header
-        let FAQId = parseInt(msg.body);
-        let FAQInformation = await axios.get('http://127.0.0.1:8000/query_categories/'+FAQId);
+//             // var place =  "";
+       
+//         // get faq id from header
+//         let FAQId = parseInt(msg.body);
+//         if(FAQId >)
+//         let FAQInformation = await axios.get('http://127.0.0.1:8000/query_categories/'+FAQId);
           
-        // get location id from header
-        console.log(FAQInformation);
+//         // get location id from header
+//         console.log(FAQInformation);
 
-        console.log(FAQId);
+//         console.log(FAQId);
 
-        msg.reply("Welcome to UDSM Information portal, select the place from the menu below by its number"+FAQInformation);
+//         msg.reply("Welcome to UDSM Information portal, select the place from the menu below by its number"+FAQInformation);
               
          
                
 
-        content = null;
+//         content = null;
 
-        console.log(content);
+//         console.log(content);
 
-} 
+// } 
 // if the user one of the locations
 // if (msg.body > 0 && content == 2) {
     
@@ -247,42 +272,42 @@ if (!msg.body.startsWith('0') && content == 1) {
                 // }
             
             
-             else if (msg.body === '!ping') {
-                // Send a new message to the same chat
-                client.sendMessage(msg.from, 'pong');
+            //  else if (msg.body === '!ping') {
+            //     // Send a new message to the same chat
+            //     client.sendMessage(msg.from, 'pong');
 
-            }
+            // }
 
 
-            else if (msg.body.startsWith('!echo ')) {
-                // Replies with the same message
-                msg.reply(msg.body.slice(6));
-            } 
-            else if (msg.body === '!location') {
-                msg.reply(new Location(37.422, -122.084, 'Googleplex\nGoogle Headquarters'));
-            }
-            else if (msg.location) {
-                msg.reply(msg.location);
-            } 
-            else if (msg.body === '!mention') {
-                const contact = await msg.getContact();
-                const chat = await msg.getChat();
-                chat.sendMessage(`Hi @${contact.number}!`, {
-                    mentions: [contact]
-                });
-            } 
+            // else if (msg.body.startsWith('!echo ')) {
+            //     // Replies with the same message
+            //     msg.reply(msg.body.slice(6));
+            // } 
+            // else if (msg.body === '!location') {
+            //     msg.reply(new Location(37.422, -122.084, 'Googleplex\nGoogle Headquarters'));
+            // }
+            // else if (msg.location) {
+            //     msg.reply(msg.location);
+            // } 
+            // else if (msg.body === '!mention') {
+            //     const contact = await msg.getContact();
+            //     const chat = await msg.getChat();
+            //     chat.sendMessage(`Hi @${contact.number}!`, {
+            //         mentions: [contact]
+            //     });
+            // } 
         
-            else if (msg.body === '!typing') {
-                const chat = await msg.getChat();
-                // simulates typing in the chat
-                chat.sendStateTyping();
-            } 
+            // else if (msg.body === '!typing') {
+            //     const chat = await msg.getChat();
+            //     // simulates typing in the chat
+            //     chat.sendStateTyping();
+            // } 
 
-            else if (msg.body === '!clearstate') {
-                const chat = await msg.getChat();
-                // stops typing or recording in the chat
-                chat.clearState();
-            }
+            // else if (msg.body === '!clearstate') {
+            //     const chat = await msg.getChat();
+            //     // stops typing or recording in the chat
+            //     chat.clearState();
+            // }
 
 });
 
