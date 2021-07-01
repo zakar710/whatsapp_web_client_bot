@@ -62,43 +62,209 @@ client.on('message', async msg => {
          || msg.body.startsWith('!Habari')
          || msg.body.startsWith('0') ){
 
-            var menu =  '';             
-            menu+='\n' +'1'+'\t'+'FAQs' + '\n'
-                      +'2'+'\t'+'Locations around the University' + '\n'
-                      +'3'+'\t'+'Subscribe for updates' + '\n'
-                      +'4'+'\t'+'Contact support' + '\n'
-                      +'5'+'\t'+'Suggest/complain about something' + '\n'; 
-            console.log(menu)   
+                                var menu =  '';             
+                                menu+='\n' +'1'+'\t'+'FAQs' + '\n'
+                                        +'2'+'\t'+'Locations around the University' + '\n'
+                                        +'3'+'\t'+'Subscribe for updates' + '\n'
+                                        +'4'+'\t'+'Contact support' + '\n'
+                                        +'5'+'\t'+'Suggest/complain about something' + '\n'; 
+                                console.log(menu)   
 
-            // const chat = await msg.getChat();
-            // chat.sendStateTyping();
-            // chat.clearState();
+                                // const chat = await msg.getChat();
+                                // chat.sendStateTyping();
+                                // chat.clearState();
 
-            msg.reply("Welcome to UDSM support chatbot, select the service from the menu below"+menu);
+                                msg.reply("Welcome to UDSM support chatbot, select the service from the menu below"+menu);
 
-            if(msg.body.startsWith('0')){
-            content = null;
+                                if(msg.body.startsWith('0')){
+                                content = null;
 
-            }
+                                }
 
-            console.log(content);
+                                console.log(content);
 
                 }
                 else{
+
                     if(msg.body){
 
-                        let id = msg.body;
-                        let userNumber = msg.from;
+                                    let number = msg.body;
+                                    let id = parseInt(number);
+                                    let userNumber = msg.from;
+                                    let UserNumber = parseInt(userNumber);
+                                    var today = new Date();
+                                    var currentTime = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
 
-                        console.log(id);
-                        console.log('Sent from'+userNumber);
 
-                        let number = parseInt(id);
-                        console.log(number);
-                        
-                        let UserNumber = parseInt(userNumber);
-                        console.log('Sent from'+UserNumber);
-            
+                                    // console.log(id);
+                                    // console.log('Sent from'+userNumber);
+
+                                    // console.log(number);
+                                    
+                                    // console.log('Sent from'+UserNumber);
+
+                            if(id == 1){
+
+                                //Faq menu
+                                axios.get('http://127.0.0.1:8000/information_feedbacks/')
+                                              .then((response) => {
+                                                var mesg =  '';
+                                        
+                                                 for(let menu of response.data){
+                                                                 
+                                                    mesg+='\n' + menu.id+'\t'+menu.query_category + '\n'; 
+                                                          
+                                                  } 
+                                                  +''; 
+                                                  msg.reply("Welcome to UDSM FAQs Menu, select the topic from the menu below by its number"+mesg);
+                                              })
+
+                                // record the visit
+                                async function recordVisit() {
+
+                                    params = {
+                                        phone_number: UserNumber,
+                                        query_category: 'Faq',
+                                        status_for_visit: '1',
+                                        dateLastAccessed: currentTime,
+                                      }
+                                
+                                    let res = await axios.post('http://127.0.0.1:8000/visits/', params);
+                                
+                                    console.log(res.data);
+                                }
+                              recordVisit();
+
+                            }
+
+                            if(id == 2){
+
+                                //locations menu
+                                 axios.get('http://127.0.0.1:8000/navigation/')
+                                 .then((response) => {
+                                   var mesg =  '';
+                           
+                                    for(let menu of response.data){
+                                                    
+                                       mesg+='\n' + menu.id+'\t'+menu.location + '\n'; 
+                                             
+                                     } 
+                                     +''; 
+                                     msg.reply("Welcome to UDSM Frequently asked locations Menu, select the topic from the menu below by its number"+mesg);
+                                 })
+                                 
+                                    // record the visit
+                                    async function recordVisit() {
+
+                                        params = {
+                                            phone_number: UserNumber,
+                                            query_category: 'Locations',
+                                            status_for_visit: '1',
+                                            dateLastAccessed: currentTime,
+                                            }
+                                    
+                                        let res = await axios.post('http://127.0.0.1:8000/visits/', params);
+                                    
+                                        console.log(res.data);
+                                    }
+                                    recordVisit();
+
+                            }
+
+                            if(id >10 && id <20){
+                                        
+                                    //locations content
+
+                                    // get location id from header
+                                    let FAQId = id;
+
+                                    axios.get('http://127.0.0.1:8000/information_feedbacks/'+FAQId)
+                                    .then((response) => {
+                                        
+
+                                        let FAQ = response.data
+                                                        
+                                        feedback = FAQ.feedback
+                                        
+
+                                        
+                                        console.log(feedback) 
+
+                                        msg.reply(+''+feedback+'');
+
+
+                                })
+
+                                                    
+                                        // record the visit
+                                        async function recordVisit() {
+                    
+                                            params = {
+                                                phone_number: UserNumber,
+                                                query_category: 'FAQS',
+                                                status_for_visit: '1',
+                                                dateLastAccessed: currentTime,
+                                            }
+                                        
+                                            let res = await axios.post('http://127.0.0.1:8000/visits/', params);
+
+                                            console.log(res.data);
+                                        }
+                                    recordVisit();
+         
+
+
+                            }
+
+                            if(id >20 && id <30)
+                            {
+                                
+                                     //locations content
+
+                                    // get location id from header
+                                    let placeId = id;
+
+                                    axios.get('http://127.0.0.1:8000/navigation/'+placeId)
+                                    .then((response) => {
+                                        
+
+                                        let navigation = response.data
+                                                        
+                                        location = navigation.location
+                                        latitude = navigation.latitude
+                                        longitude = navigation.longitude
+
+                                        
+                                        console.log(location) 
+                                        console.log(latitude) 
+                                        console.log(longitude) 
+
+                                        msg.reply(new Location(longitude, latitude, location));
+
+
+                                                         })
+
+                                                    
+                                        // record the visit
+                                        async function recordVisit() {
+                    
+                                            params = {
+                                                phone_number: UserNumber,
+                                                query_category: 'Location',
+                                                status_for_visit: '1',
+                                                dateLastAccessed: currentTime,
+                                            }
+                                        
+                                            let res = await axios.post('http://127.0.0.1:8000/visits/', params);
+
+                                            console.log(res.data);
+                                        }
+                                    recordVisit();
+                               
+                                
+                            }
+
+                
                         }
 
                 }
